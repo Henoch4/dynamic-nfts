@@ -1,0 +1,904 @@
+{
+  "abiSource": "pending-current-source",
+  "repo": "dynamic-nfts",
+  "brand": "DynamicNFTs",
+  "summary": "Collectibles with on-chain ownership, metadata, experience and levels.",
+  "address": null,
+  "owner": null,
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "approved",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        }
+      ],
+      "name": "ApprovalForAll",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newCost",
+          "type": "uint256"
+        }
+      ],
+      "name": "EvolutionCostSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newLevel",
+          "type": "uint256"
+        }
+      ],
+      "name": "NFTLeveledUp",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "level",
+          "type": "uint256"
+        }
+      ],
+      "name": "NFTMinted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        }
+      ],
+      "name": "NFTTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newLevel",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newXP",
+          "type": "uint256"
+        }
+      ],
+      "name": "NFTUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "who",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "collectedFees",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "evolutionCost",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "evolveNFT",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getApproved",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getNFT",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "level",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "xp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastUpdate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "holder",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "name": "isApprovedForAll",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "level",
+          "type": "uint256"
+        }
+      ],
+      "name": "mintNFT",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "nfts",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "level",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "xp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastUpdate",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOf",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        }
+      ],
+      "name": "setApprovalForAll",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newCost",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "newXpPerEvo",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "newXpToLevel",
+          "type": "uint256"
+        }
+      ],
+      "name": "setEvolutionCost",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "id",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "tokenCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenOwner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenURI",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        }
+      ],
+      "name": "transferNFT",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "newURI",
+          "type": "string"
+        }
+      ],
+      "name": "updateNFT",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "userNFTs",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "withdrawFees",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "xpPerEvolution",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "xpToLevelUp",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "writes": [
+    {
+      "name": "approve",
+      "signature": "approve(address,uint256)",
+      "title": "Approve a token allowance",
+      "admin": false,
+      "actor": null
+    },
+    {
+      "name": "evolveNFT",
+      "signature": "evolveNFT(uint256)",
+      "title": "Evolve your collectible",
+      "admin": false,
+      "rule": [
+        "getNFT",
+        [
+          "owner"
+        ]
+      ],
+      "actor": null
+    },
+    {
+      "name": "mintNFT",
+      "signature": "mintNFT(address,string,uint256)",
+      "title": "Mint a collectible",
+      "admin": true,
+      "actor": null
+    },
+    {
+      "name": "safeTransferFrom",
+      "signature": "safeTransferFrom(address,address,uint256)",
+      "title": "Safe Transfer From",
+      "admin": false,
+      "actor": null
+    },
+    {
+      "name": "safeTransferFrom",
+      "signature": "safeTransferFrom(address,address,uint256,bytes)",
+      "title": "Safe Transfer From",
+      "admin": false,
+      "actor": null
+    },
+    {
+      "name": "setApprovalForAll",
+      "signature": "setApprovalForAll(address,bool)",
+      "title": "Set Approval For All",
+      "admin": false,
+      "actor": null
+    },
+    {
+      "name": "setEvolutionCost",
+      "signature": "setEvolutionCost(uint256,uint256,uint256)",
+      "title": "Set evolution terms",
+      "admin": true,
+      "actor": null
+    },
+    {
+      "name": "transferFrom",
+      "signature": "transferFrom(address,address,uint256)",
+      "title": "Transfer approved tokens",
+      "admin": false,
+      "actor": null
+    },
+    {
+      "name": "transferNFT",
+      "signature": "transferNFT(uint256,address)",
+      "title": "Transfer your collectible",
+      "admin": false,
+      "rule": [
+        "getNFT",
+        [
+          "owner"
+        ]
+      ],
+      "actor": null
+    },
+    {
+      "name": "updateNFT",
+      "signature": "updateNFT(uint256,string)",
+      "title": "Update metadata",
+      "admin": true,
+      "actor": null
+    },
+    {
+      "name": "withdrawFees",
+      "signature": "withdrawFees()",
+      "title": "Withdraw fees",
+      "admin": true,
+      "actor": null
+    }
+  ],
+  "money": [
+    "setEvolutionCost.newCost"
+  ],
+  "idBase": 0,
+  "layout": 4,
+  "legacy": null,
+  "readOnlyReason": null
+}

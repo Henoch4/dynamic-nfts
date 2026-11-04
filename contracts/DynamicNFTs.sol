@@ -39,6 +39,13 @@ contract DynamicNFTs is ReentrancyGuard, Ownable {
     uint256 public xpPerEvolution;
     uint256 public xpToLevelUp;
     uint256 public collectedFees;
+    string public constant name = "DynamicNFTs";
+    string public constant symbol = "DNFT";
+    mapping(uint256 => address) private approvals;
+    mapping(address => mapping(address => bool)) private operators;
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
     event NFTMinted(uint256 indexed tokenId, address indexed owner, string uri, uint256 level);
     event NFTUpdated(uint256 indexed tokenId, address indexed owner, uint256 newLevel, uint256 newXP);
@@ -56,6 +63,7 @@ contract DynamicNFTs is ReentrancyGuard, Ownable {
     function mintNFT(address to, string memory uri, uint256 level)
         external onlyOwner nonReentrant returns (uint256) {
         require(level > 0, "Zero level");
+        require(to != address(0), "Zero recipient");
         NFT storage n = nfts.push();
         n.owner = to;
         n.uri = uri;
@@ -68,6 +76,7 @@ contract DynamicNFTs is ReentrancyGuard, Ownable {
         tokenOwner[tid] = to;
         userNFTs[to].push(tid);
         emit NFTMinted(tid, to, uri, level);
+        emit Transfer(address(0), to, tid);
         return tid;
     }
 
@@ -84,12 +93,16 @@ contract DynamicNFTs is ReentrancyGuard, Ownable {
 
     // FIX: mint/transfer left tokenOwner/userNFTs out of sync. Now updated here too.
     function transferNFT(uint256 tokenId, address to) external nonReentrant {
+        _moveNFT(ownerOf(tokenId), to, tokenId);
+    }
+
+    function _moveNFT(address from, address to, uint256 tokenId) internal {
         NFT storage n = nfts[tokenId];
         require(n.active, "NFT inactive");
-        require(n.owner == msg.sender, "Not owner");
+        require(n.owner == from, "Wrong owner");
+        require(msg.sender == from || approvals[tokenId] == msg.sender || operators[from][msg.sender], "Not authorized");
         require(to != address(0), "Zero address");
-        require(to != n.owner, "Self transfer");
-        address from = n.owner;
+        delete approvals[tokenId];
         n.owner = to;
         tokenOwner[tokenId] = to;
         userNFTs[to].push(tokenId);
@@ -102,6 +115,41 @@ contract DynamicNFTs is ReentrancyGuard, Ownable {
             }
         }
         emit NFTTransferred(tokenId, from, to);
+        emit Transfer(from, to, tokenId);
+    }
+
+    function ownerOf(uint256 tokenId) public view returns (address) {
+        require(tokenId < nfts.length && nfts[tokenId].active, "Unknown token");
+        return nfts[tokenId].owner;
+    }
+    function balanceOf(address who) external view returns (uint256) {
+        require(who != address(0), "Zero owner");
+        return userNFTs[who].length;
+    }
+    function tokenURI(uint256 tokenId) external view returns (string memory) { ownerOf(tokenId); return nfts[tokenId].uri; }
+    function supportsInterface(bytes4 id) external pure returns (bool) { return id == 0x01ffc9a7 || id == 0x80ac58cd || id == 0x5b5e139f; }
+    function approve(address to, uint256 tokenId) external {
+        address holder = ownerOf(tokenId);
+        require(msg.sender == holder || operators[holder][msg.sender], "Not authorized");
+        approvals[tokenId] = to;
+        emit Approval(holder, to, tokenId);
+    }
+    function getApproved(uint256 tokenId) external view returns (address) { ownerOf(tokenId); return approvals[tokenId]; }
+    function setApprovalForAll(address operator, bool approved) external {
+        require(operator != msg.sender, "Self approval");
+        operators[msg.sender][operator] = approved;
+        emit ApprovalForAll(msg.sender, operator, approved);
+    }
+    function isApprovedForAll(address holder, address operator) external view returns (bool) { return operators[holder][operator]; }
+    function transferFrom(address from, address to, uint256 tokenId) external nonReentrant { _moveNFT(from, to, tokenId); }
+    function safeTransferFrom(address from, address to, uint256 tokenId) external nonReentrant { _safeMove(from, to, tokenId, ""); }
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external nonReentrant { _safeMove(from, to, tokenId, data); }
+    function _safeMove(address from, address to, uint256 tokenId, bytes memory data) internal {
+        _moveNFT(from, to, tokenId);
+        if (to.code.length > 0) {
+            (bool ok, bytes memory reply) = to.call(abi.encodeWithSignature("onERC721Received(address,address,uint256,bytes)", msg.sender, from, tokenId, data));
+            require(ok && reply.length >= 32 && abi.decode(reply, (bytes4)) == 0x150b7a02, "Unsafe recipient");
+        }
     }
 
     // FIX: added owner-of-token evolution loop: pay native BOT cost, gain XP, level up

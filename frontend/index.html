@@ -1,12 +1,13 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dynamic NFTs — Living Collectibles on BOT Chain</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Familjen+Grotesk:wght@400;600;700&family=Martian+Mono:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@reown/appkit@1.8.21/dist/appkit.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@reown/appkit-adapter-ethers@1.8.21/dist/appkit-adapter-ethers.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+
+
+
+
 <style>
 :root{--motion-fast:200ms;--motion-base:600ms;--motion-slow:1100ms;--pearl:#eeeef7;--ink:#101018;--vi:#6a5cff;--tq:#00d5c4;--am:#ffd36e;--holo:linear-gradient(120deg,#6a5cff,#00d5c4,#ffd36e,#6a5cff);--lv:1}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
@@ -43,127 +44,11 @@ footer{border-top:1.5px solid var(--ink);padding:26px 5vw 40px;display:flex;flex
 @media(max-width:820px){.hero{grid-template-columns:1fr}.pan:nth-child(n){grid-column:1/-1;margin-top:0}nav{top:6px;left:6px;right:6px}.mq{font-size:34px}}
 
 @media(prefers-reduced-motion:reduce){.rv{transition:none!important;opacity:1;transform:none!important}*{animation:none!important}}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc,currentColor);outline-offset:2px}</style></head><body>
-<nav><div class="logo">Dynamic/NFT</div><div class="wal"><span class="badge">Chain ID <span class="chainid">677</span></span><select id="net"><option value="677">Mainnet 677</option><option value="968">Testnet 968</option></select><button id="connect" onclick="appkitConnect()" >Connect</button></div></nav>
-<section class="hero"><div><span class="launch">Built on BOT Chain Mainnet</span><h1>NFTs that <b>grow up.</b></h1><p>Level, XP and metadata live on-chain and change as your collectible does. Mint it, evolve it, send it on.</p></div>
-<div class="stage" id="stage"><div class="card" id="card"><small>Token #<span id="cid">0</span> &bull; <span id="cown">demo</span></small><div class="sig"><svg viewBox="0 0 100 100"><path id="sh" d="M50 10 L90 50 L50 90 L10 50Z"/></svg></div><div><div class="lv">Lv <span id="clv">1</span></div><small><span id="cxp">0</span> XP</small><div class="xpbar"><i id="xb"></i></div></div></div></div></section>
-<div class="mq"><div id="mq"></div></div>
-<section class="lab">
-<div class="pan"><small>01 — mintNFT</small><h3>Hatch one</h3><div class="f"><input id="m1" placeholder="Recipient (blank = you)"><input id="m2" placeholder="Token URI (ipfs://…)"></div><button class="btn h" id="b1">Mint</button><div class="out" id="o1"></div></div>
-<div class="pan"><small>02 — updateNFT</small><h3>Evolve</h3><div class="f"><input id="u0" type="number" placeholder="Token ID"><input id="u1" type="number" placeholder="New level"><input id="u2" type="number" placeholder="New XP"><input id="u3" placeholder="New URI"></div><button class="btn h" id="b2">Update</button><div class="out" id="o2"></div></div>
-<div class="pan"><small>03 — transferNFT</small><h3>Pass it on</h3><div class="f"><input id="t1" type="number" placeholder="Token ID"><input id="t2" placeholder="To address 0x…"></div><button class="btn" id="b3">Transfer</button><div class="out" id="o3"></div></div>
-<div class="pan"><small>04 — getNFT</small><h3>Inspect</h3><div class="f"><input id="g1" type="number" placeholder="Token ID"></div><button class="btn" id="b4">Read</button><div class="out" id="o4"></div></div>
-</section>
-<footer><span>Dynamic NFTs — Evolving NFTs with on-chain level, XP and metadata on BOT Chain</span><span>&#8226;Chain ID <b>677</b> &#8226;Contract <span class="mono">0xCA…</span></span><span>&#8226; <a href="https://botchain.ai" target="_blank" rel="noopener">BOT Chain Website</a> &#8226; <a href="https://scan.botchain.ai/" target="_blank" rel="noopener">BOTScan Explorer</a></span></footer>
-<div id="toast"></div>
-<script>
-const PROJECT_ID = 'ee6081d44f535b82b71aa2003badb2b7'; // AppKit project ID — wired for BOT Chain 677
-
-const CA={677:'0xCA…TODO',968:''}; // TODO:set deployed contract addresses
-const CHAINS={677:{hex:'0x2a5',name:'BOT Chain Mainnet',rpc:'https://rpc.botchain.ai',ex:'https://scan.botchain.ai'},968:{hex:'0x3c8',name:'BOT Chain Testnet',rpc:'https://rpc.bohr.life',ex:null}};
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-let provider=null,signer=null,account=null,chain=677;
-const short=a=>a?a.slice(0,6)+'…'+a.slice(-4):'';
-function toast(m,t){const el=$('#toast');const d=document.createElement('div');d.className='t '+(t||'');d.textContent=m;el.appendChild(d);setTimeout(()=>d.classList.add('in'),10);setTimeout(()=>{d.classList.remove('in');setTimeout(()=>d.remove(),400)},4200)}
-async function switchChain(id){const c=CHAINS[id];if(!window.ethereum)return;
- try{await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:c.hex}]})}
- catch(e){if(e.code===4902||(e.data&&e.data.originalError&&e.data.originalError.code===4902)||/unrecognized|not added/i.test(explainError(e)||'')){
- const p={chainId:c.hex,chainName:c.name,nativeCurrency:{name:'BOT',symbol:'BOT',decimals:18},rpcUrls:[c.rpc]};if(c.ex)p.blockExplorerUrls=[c.ex];
- await window.ethereum.request({method:'wallet_addEthereumChain',params:[p]})}else throw e}}
-// ===== Phase B:AppKit + GSAP runtime =====
-let appkit=null, currentNet=677, contract=null;
-
-async function initAppKit(){
- try{
- const{createAppKit}=window;
- const{EthersAdapter}=window;
- const adapter=new EthersAdapter();
- appkit=createAppKit({
- adapters:[adapter],
- networks:[
-{id:677,name:'BOT Mainnet',nativeCurrency:{name:'BOT',symbol:'BOT',decimals:18},rpcUrls:{default:{http:['https://rpc.botchain.ai']}}},
-{id:968,name:'BOT Testnet',nativeCurrency:{name:'BOT',symbol:'BOT',decimals:18},rpcUrls:{default:{http:['https://rpc.bohr.life']}}}
-      ],
- projectId:PROJECT_ID,
- features:{analytics:false}
-});
- appkit.subscribeAccount((a)=>{const addr=a.address||null;const b=$('#connect')||$('#connectBtn')||$('#walletBtn')||$('#wbtn');if(b)b.textContent=addr?addr.slice(0,6)+'…'+addr.slice(-4):'Connect wallet';const m=$('#mode')||$('#modeTag');if(m)m.textContent=addr?'LIVE':'DEMO'});
- appkit.subscribeNetwork((n)=>{if(n&&n.chainId){currentNet=Number(n.chainId);const b=$('#badge')||$('#cid')||$('#chainBadge')||$('#netpill');if(b)b.textContent='Chain ID '+currentNet}});
-}catch(e){console.warn('AppKit init failed',e)}
-}
-async function appkitConnect(){
- if(!appkit)await initAppKit();
- if(appkit){try{await appkit.open()}catch(e){toast('AppKit connect failed: '+(explainError(e)||e.code),'err')}return}
-  // Fallback:raw ethers connect
- if(!window.ethereum){toast('No wallet found - install a Web3 wallet',true);return}
- try{const accts=await window.ethereum.request({method:'eth_requestAccounts'});setWallet(accts.length>0,accts[0]);provider=new ethers.BrowserProvider(window.ethereum);signer=await provider.getSigner();await ensureChain();initContract()}catch(e){toast('Wallet connect: '+ (explainError(e)||e.code),true)}}
-function setWallet(connected,addr){const b=$('#connect')||$('#connectBtn')||$('#walletBtn')||$('#wbtn');if(b)b.textContent=addr?addr.slice(0,6)+'…'+addr.slice(-4):'Connect wallet';b.classList.toggle('connected',!!addr)}
-function initContract(){if(!currentNet){return}try{const provider=new ethers.JsonRpcProvider(NETS[currentNet].rpc);const abi=[];contract=new ethers.Contract(NETS[currentNet].ca,abi,signer||provider)}catch(e){console.warn('contract init',e);contract=null}}
-async function ensureChain(){if(!window.ethereum)return;try{const cid=await window.ethereum.request({method:'eth_chainId'});currentNet=Number(cid);if(!NETS[currentNet]){try{await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x2a5'}]});currentNet=677}catch(sw){if(sw.code===4902||/unrecognized|not added|add/i.test(sw.message||sw.code||'')){try{await window.ethereum.request({method:'wallet_addEthereumChain',params:[{chainId:'0x2a5',chainName:'BOT Chain Mainnet',nativeCurrency:{name:'BOT',symbol:'BOT',decimals:18},rpcUrls:['https://rpc.botchain.ai'],blockExplorerUrls:['https://scan.botchain.ai']}]});currentNet=677}catch(ae){toast('Add chain failed: '+(ae.message||ae.code),'err')}}else{toast('Switch rejected: '+(sw.message||sw.code),'err')}}}}catch(e4){currentNet=currentNet||677}}
-
-function explainError(e){if(!e)return 'Unknown error';const m=explainError(e)||explainError(e)||(e.data&&e.data.message)||'';if(e.code===4001)return 'Transaction rejected in wallet. Nothing spent on-chain.';let msg=String(m||explainError(e)||String(e));msg=msg.replace(/^execution reverted:/i,'').trim();if(msg.length>170)msg=msg.slice(0,167)+'..';return msg}
-// ===== Phase B:AppKit + GSAP runtime =====
-
-
-
-async function initAppKit(){
- try{
- const{createAppKit}=window;
- const{EthersAdapter}=window;
- const adapter=new EthersAdapter();
- appkit=createAppKit({
- adapters:[adapter],
- networks:[
-{id:677,name:'BOT Mainnet',nativeCurrency:{name:'BOT',symbol:'BOT',decimals:18},rpcUrls:{default:{http:['https://rpc.botchain.ai']}}},
-{id:968,name:'BOT Testnet',nativeCurrency:{name:'BOT',symbol:'BOT',decimals:18},rpcUrls:{default:{http:['https://rpc.bohr.life']}}}
-      ],
- projectId:PROJECT_ID,
- features:{analytics:false}
-});
- appkit.subscribeAccount((a)=>{const addr=a.address||null;const b=$('#connect')||$('#connectBtn')||$('#walletBtn')||$('#wbtn');if(b)b.textContent=addr?addr.slice(0,6)+'…'+addr.slice(-4):'Connect wallet';const m=$('#mode')||$('#modeTag');if(m)m.textContent=addr?'LIVE':'DEMO'});
- appkit.subscribeNetwork((n)=>{if(n&&n.chainId){currentNet=Number(n.chainId);const b=$('#badge')||$('#cid')||$('#chainBadge')||$('#netpill');if(b)b.textContent='Chain ID '+currentNet}});
-}catch(e){console.warn('AppKit init failed',e)}
-}
-async function appkitConnect(){
- if(!appkit)await initAppKit();
- if(appkit){try{await appkit.open()}catch(e){toast('AppKit connect failed: '+(e.message||e.code),'err');return}}
- if(!window.ethereum){toast('No wallet found - install a Web3 wallet',true);return}
- try{const accts=await window.ethereum.request({method:'eth_requestAccounts'});setWallet(accts.length>0,accts[0]);provider=new ethers.BrowserProvider(window.ethereum);signer=await provider.getSigner();await ensureChain();initContract()}catch(e){toast('Wallet connect: '+(e.message||e.code),true)}
-}
-function setWallet(connected,addr){const b=$('#connect')||$('#connectBtn')||$('#walletBtn')||$('#wbtn');if(b)b.textContent=addr?addr.slice(0,6)+'…'+addr.slice(-4):'Connect wallet';b.classList.toggle('connected',!!addr)}
-function initContract(){if(!currentNet){return}try{const provider=new ethers.JsonRpcProvider(NETS[currentNet].rpc);contract=new ethers.Contract(NETS[currentNet].ca,[],signer||provider)}catch(e){console.warn('contract init',e);contract=null}}
-async function ensureChain(){if(!window.ethereum)return;try{const cid=await window.ethereum.request({method:'eth_chainId'});currentNet=Number(cid);if(!NETS[currentNet]){try{await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x2a5'}]});currentNet=677}catch(sw){if(sw.code===4902||/unrecognized|not added|add/i.test(sw.message||sw.code||'')){try{await window.ethereum.request({method:'wallet_addEthereumChain',params:[{chainId:'0x2a5',chainName:'BOT Chain Mainnet',nativeCurrency:{name:'BOT',symbol:'BOT',decimals:18},rpcUrls:['https://rpc.botchain.ai'],blockExplorerUrls:['https://scan.botchain.ai']}]});currentNet=677}catch(ae){toast('Add chain failed: '+(ae.message||ae.code),'err')}}else{toast('Switch rejected: '+(sw.message||sw.code),'err')}}}}catch(e4){currentNet=currentNet||677}}
-
-function explainError(e){if(!e)return 'Unknown error';const m=e.shortMessage||e.reason||(e.data&&e.data.message)||'';if(e.code===4001)return 'Transaction rejected in wallet. Nothing spent on-chain.';let msg=String(m||e.message||String(e));msg=msg.replace(/^execution reverted:/i,'').trim();if(msg.length>170)msg=msg.slice(0,167)+'..';return msg}
-
-async function sendTx(btn,fnName,args,valueEth,label){if(!contract||!signer){toast('Connect wallet first',true);return}const resting=btn.textContent;btn.disabled=true;btn.classList.add('busy');btn.textContent='Confirm in wallet..';try{if(!currentNet)await ensureChain();const usable=contract.connect(signer);const tx=valueEth!=null?await usable[fnName](...args,{value:ethers.parseEther(String(valueEth))}):await usable[fnName](...args);const rc=await tx.wait();toast((label||fnName)+' confirmed on '+(currentNet?currentNet.label:'chain'));return tx}catch(e){toast(explainError(e),true);throw e}finally{btn.disabled=false;btn.classList.remove('busy');btn.textContent=resting}}
-
-function initGSAP(){
- if(typeof gsap==='undefined')return;
- const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
- if(reduced){document.querySelectorAll('.rv').forEach(el=>{el.style.opacity='1';el.style.transform='none'});return}
- gsap.registerPlugin(ScrollTrigger);
- gsap.from('.rv',{opacity:0,y:26,duration:0.7,ease:'expo.out',stagger:0.07});
- gsap.utils.toArray('.rv').forEach(el=>{gsap.from(el,{opacity:0,y:34,duration:0.8,ease:'expo.out',scrollTrigger:{trigger:el,start:'top 85%'},clearProps:'all'})});
-}
-
-function addBusyStates(){
- document.addEventListener('click',function(e){const btn=e.target.closest('button');if(btn&&!btn.classList.contains('busy')&&!btn.disabled){btn.disabled=true;btn.classList.add('busy');const origText=btn.textContent;btn.textContent='Confirming..';setTimeout(()=>{btn.disabled=false;btn.classList.remove('busy');btn.textContent=origText},5000)}},true);
-}
-
-function addAria(){
- document.querySelectorAll('button').forEach(b=>{if(!b.getAttribute('aria-label')&&!b.getAttribute('aria-labelledby')){b.setAttribute('aria-label',b.textContent.trim()||'button')}});
- document.querySelectorAll('input,select,textarea').forEach(el=>{if(!el.getAttribute('aria-label')&&!el.getAttribute('aria-labelledby')){const lab=el.previousElementSibling;if(lab&&lab.tagName==='LABEL'){el.setAttribute('aria-labelledby',lab.id||(lab.id='lab-'+Math.random().toString(36).slice(2)))}}});
-}
-
-if(window.ethereum&&window.ethereum.on){
- window.ethereum.on('accountsChanged',(a)=>{
- const b=$('#connect')||$('#connectBtn')||$('#walletBtn')||$('#wbtn');
- if(b)b.textContent=a&&a[0]?a[0].slice(0,6)+'…'+a[0].slice(-4):'Connect wallet';
-});
- window.ethereum.on('chainChanged',(id)=>{
- const n=parseInt(id,16);
- const b=$('#badge')||$('#cid')||$('#chainBadge')||$('#netpill');
- if(b)b.textContent='Chain ID '+n;
-});
-}</script></body></html>
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc,currentColor);outline-offset:2px}</style><link href="./product.css" rel="stylesheet"><script defer src="./vendor/ethers.umd.min.js"></script><script defer src="./product.js"></script></head><body id="top" class="suite-product"><div class="suite-nav" role="navigation" aria-label="Main navigation"><a class="suite-brand" href="#top">DynamicNFTs</a><span id="suite-network" role="status">Checking mainnet…</span><button id="suite-wallet" type="button" disabled>Connect wallet</button><button id="suite-disconnect" type="button" hidden>Disconnect</button><a href="#suite-workspace">Open app</a></div>
+<section class="hero"><div><span class="launch">Built for BOT Chain</span><h1>NFTs that <b>grow up.</b></h1><p>Collectibles with on-chain ownership, metadata, experience and levels.</p></div>
+</section><main class="suite-workspace suite-layout-4" id="suite-workspace"><p id="suite-message" role="status" aria-live="polite">Checking BOT Chain mainnet…</p><h2 id="suite-heading">DynamicNFTs</h2><p id="suite-summary"></p><div id="suite-address"></div>
+<section id="suite-overview" aria-labelledby="suite-overview-heading"><h2 id="suite-overview-heading">On-chain overview</h2><div class="suite-grid" id="suite-stats"></div><button type="button" id="suite-refresh">Refresh mainnet data</button></section>
+<section id="suite-actions" aria-labelledby="suite-actions-heading"><h2 id="suite-actions-heading">Your next move</h2><p id="suite-actions-note"></p><div class="suite-grid" id="suite-action-grid"></div></section>
+<section id="suite-lookup" aria-labelledby="suite-lookup-heading"><h2 id="suite-lookup-heading">Find a record</h2><label class="suite-field" for="suite-query">What would you like to look up?<select id="suite-query"></select></label><form id="suite-query-form"></form><div id="suite-query-result" class="suite-result" aria-live="polite"></div><div id="suite-record-actions" class="suite-grid"></div></section>
+<section aria-labelledby="suite-history-heading"><h2 id="suite-history-heading">Your session activity</h2><div id="suite-history"></div></section></main>
+<dialog id="suite-review" class="suite-review" aria-labelledby="suite-review-title"><div id="suite-review-content"></div><div class="suite-review-actions"><button type="button" id="suite-confirm">Confirm in wallet</button><button type="button" id="suite-review-cancel">Cancel</button></div></dialog><footer class="suite-footer"><span>DynamicNFTs · BOT Chain mainnet 677</span><a rel="noopener noreferrer" target="_blank" href="https://botchain.ai">BOT Chain Website</a><a rel="noopener noreferrer" target="_blank" href="https://scan.botchain.ai/">BOTScan Explorer</a><span>Mainnet deployment pending</span></footer></body></html>
