@@ -44,3 +44,14 @@ body.suite-product button,body.suite-product a{cursor:pointer!important}
 .suite-layout-4 .suite-action{border:0;border-top:2px solid currentColor;border-radius:0;padding:24px 0}
 @media(max-width:600px){.suite-nav{padding:14px 16px;gap:10px}.suite-nav #suite-network{order:3;width:100%;font-size:13px}.suite-workspace{padding:36px 16px}.suite-layout-1 .suite-action{grid-template-columns:1fr}.suite-workspace .suite-values{grid-template-columns:1fr}.suite-values dd{margin-bottom:12px}}
 @media(prefers-reduced-motion:reduce){body.suite-product *,body.suite-product *::before,body.suite-product *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* ==== layout variant: split ==== */
+.su-split .suite-workspace{max-width:1280px}
+.su-split #suite-actions{float:left;width:min(360px,34vw);position:sticky;top:90px;margin:0 36px 24px 0;max-height:calc(100dvh - 120px);overflow:auto;border:1px solid currentColor;border-radius:12px;padding:22px;box-sizing:border-box}
+.su-split #suite-actions h2{font-size:20px;margin-bottom:12px}
+.su-split #suite-action-grid{grid-template-columns:1fr;gap:12px}
+.su-split .suite-action{border-radius:10px;padding:16px}
+.su-split .suite-workspace section:last-of-type{clear:both}
+.su-split .suite-result{min-height:70px;border:1px dashed currentColor;border-radius:8px;padding:10px 12px}
+@media(max-width:900px){.su-split #suite-actions{float:none;width:auto;position:static;max-height:none;margin:0 0 18px}}
+
