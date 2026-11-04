@@ -4,7 +4,7 @@ Collectibles with on-chain ownership, metadata, experience and levels.
 
 ## Mainnet status
 
-Mainnet deployment is pending. The interface does not simulate transactions or balances.
+Contract on BOT Chain mainnet (677): [0x30CeF365e9B5AB0b863A130F467D7f7d2bAf9f6f](https://scan.botchain.ai/address/0x30CeF365e9B5AB0b863A130F467D7f7d2bAf9f6f).
 
 Wallet actions require BOT Chain mainnet, deployed bytecode, and a connected compatible wallet. Every action is simulated before a transaction review; only a subsequent wallet confirmation can send it.
 
@@ -19,13 +19,18 @@ Wallet actions require BOT Chain mainnet, deployed bytecode, and a connected com
 
 ## Contract interface
 
-`frontend/product.json` uses the ABI compiled from the current Solidity source.
+`frontend/product.json` uses the current-source ABI, matched against the deployed mainnet runtime bytecode. Explorer source publication is tracked separately.
 
 | Action | Contract signature |
 |---|---|
+| Approve a token allowance | `approve(address,uint256)` |
 | Evolve your collectible | `evolveNFT(uint256)` |
 | Mint a collectible (owner only) | `mintNFT(address,string,uint256)` |
+| Safe Transfer From | `safeTransferFrom(address,address,uint256)` |
+| Safe Transfer From | `safeTransferFrom(address,address,uint256,bytes)` |
+| Set Approval For All | `setApprovalForAll(address,bool)` |
 | Set evolution terms (owner only) | `setEvolutionCost(uint256,uint256,uint256)` |
+| Transfer approved tokens | `transferFrom(address,address,uint256)` |
 | Transfer your collectible | `transferNFT(uint256,address)` |
 | Update metadata (owner only) | `updateNFT(uint256,string)` |
 | Withdraw fees (owner only) | `withdrawFees()` |

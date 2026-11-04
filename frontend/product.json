@@ -1,9 +1,9 @@
 {
-  "abiSource": "pending-current-source",
+  "abiSource": "runtime-matched-current-source",
   "repo": "dynamic-nfts",
   "brand": "DynamicNFTs",
   "summary": "Collectibles with on-chain ownership, metadata, experience and levels.",
-  "address": null,
+  "address": "0x30CeF365e9B5AB0b863A130F467D7f7d2bAf9f6f",
   "owner": null,
   "abi": [
     {
